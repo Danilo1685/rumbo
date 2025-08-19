@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Diseño Atómico - Rumbo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: white;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #ff0080, #ff8c00, #40e0d0, #9400d3);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            font-size: 18px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-subtitle {
+            font-size: 16px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .components-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .component-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .component-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #ff0080;
+        }
+
+        .component-demo {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 20px;
+            min-height: 120px;
+        }
+
+        .component-description {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.5;
+        }
+
+        /* ÁTOMOS */
+        .btn-primary {
+            background: linear-gradient(45deg, #ff0080, #ff8c00);
+            border: none;
+            color: white;
+            padding: 16px 40px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 8px 20px rgba(255,0,128,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(255,0,128,0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 16px 40px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            border-color: #ff0080;
+            color: #ff0080;
+            box-shadow: 0 0 20px rgba(255,0,128,0.2);
+        }
+
+        .form-input {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            padding: 16px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #ff0080;
+            box-shadow: 0 0 0 3px rgba(255,0,128,0.1);
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+            font-size: 20px;
+            color: #ff0080;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .text-primary {
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .text-secondary {
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+        }
+
+        .filter-chip {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-chip.active {
+            background: linear-gradient(45deg, #ff0080, #40e0d0);
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(255,0,128,0.3);
+        }
+
+        /* MOLÉCULAS */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: rgba(255,255,255,0.9);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .search-bar {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 25px;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .search-bar input {
+            background: transparent;
+            border: none;
+            color: white;
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .search-bar input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .quick-card {
+            min-width: 160px;
+            height: 120px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            backdrop-filter: blur(10px);
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .card-value {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ff0080, #40e0d0);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card-subtitle {
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.6);
+            font-size: 12px;
+            font-weight: 500;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: #ff0080;
+        }
+
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        /* ORGANISMOS */
+        .dashboard-header {
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            color: white;
+            padding: 30px 25px 25px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .greeting h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            background: linear-gradient(45deg, #ff0080, #40e0d0);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .location {
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: linear-gradient(45deg, #ff0080, #ff8c00);
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            width: 18px;
+            height: 18px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(45deg, #ff0080, #40e0d0);
+            border-radius: 22px;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .bottom-nav {
+            display: flex;
+            background: #1a1a1a;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 10px;
+            justify-content: space-around;
+        }
+
+        .form-container {
+            background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
+            padding: 40px 30px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #ff0080, #40e0d0);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-subtitle {
+            color: rgba(255,255,255,0.7);
+            font-size: 16px;
+        }
+
+        .colors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .color-swatch {
+            height: 80px;
+            border-radius: 12px;
+            position: relative;
+            display: flex;
+            align-items: end;
+            padding: 10px;
+        }
+
+        .color-label {
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .gradient-primary { background: linear-gradient(45deg, #ff0080, #ff8c00); }
+        .gradient-secondary { background: linear-gradient(45deg, #40e0d0, #9400d3); }
+        .dark-primary { background: #0d0d0d; }
+        .dark-secondary { background: #1a1a1a; }
+        .accent { background: #ff0080; }
+
+        .demo-examples {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (max-width: 768px) {
+            .components-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>RUMBO</h1>
+            <p>Sistema de Diseño Atómico - Navegando hacia la inclusión</p>
+        </div>
+
+        <!-- Colores del Sistema -->
+        <div class="section">
+            <h2 class="section-title">🎨 Paleta de Colores</h2>
+            <p class="section-subtitle">Los colores principales del sistema, diseñados para crear una experiencia visual inclusiva y accesible.</p>
+            <div class="colors-grid">
+                <div class="color-swatch gradient-primary">
+                    <span class="color-label">Gradiente Primario</span>
+                </div>
+                <div class="color-swatch gradient-secondary">
+                    <span class="color-label">Gradiente Secundario</span>
+                </div>
+                <div class="color-swatch dark-primary">
+                    <span class="color-label">Fondo Principal</span>
+                </div>
+                <div class="color-swatch dark-secondary">
+                    <span class="color-label">Fondo Secundario</span>
+                </div>
+                <div class="color-swatch accent">
+                    <span class="color-label">Color de Acento</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ÁTOMOS -->
+        <div class="section">
+            <h2 class="section-title">⚛️ Átomos</h2>
+            <p class="section-subtitle">Los elementos más básicos de la interfaz. No pueden dividirse en componentes más pequeños sin perder su funcionalidad.</p>
+            
+            <div class="components-grid">
+                <!-- Botones -->
+                <div class="component-card">
+                    <h3 class="component-title">Botones</h3>
+                    <div class="component-demo">
+                        <button class="btn-primary">Botón Primario</button>
+                        <button class="btn-secondary">Botón Secundario</button>
+                    </div>
+                    <p class="component-description">Botones con gradientes distintivos para acciones principales y secundarias, con efectos hover para mejor feedback.</p>
+                </div>
+
+                <!-- Inputs -->
+                <div class="component-card">
+                    <h3 class="component-title">Input de Texto</h3>
+                    <div class="component-demo">
+                        <input type="text" class="form-input" placeholder="Escribe aquí..." />
+                    </div>
+                    <p class="component-description">Campos de entrada con fondos semitransparentes y bordes que cambian de color al enfocar, optimizados para accesibilidad.</p>
+                </div>
+
+                <!-- Íconos -->
+                <div class="component-card">
+                    <h3 class="component-title">Íconos</h3>
+                    <div class="component-demo demo-examples">
+                        <span class="icon">🏠</span>
+                        <span class="icon">🗺️</span>
+                        <span class="icon">💬</span>
+                        <span class="icon">👤</span>
+                        <span class="icon">⭐</span>
+                    </div>
+                    <p class="component-description">Íconos emoji consistentes que mantienen legibilidad y reconocimiento universal para la navegación.</p>
+                </div>
+
+                <!-- Textos -->
+                <div class="component-card">
+                    <h3 class="component-title">Textos</h3>
+                    <div class="component-demo">
+                        <p class="text-primary">Texto Primario</p>
+                        <p class="text-secondary">Texto Secundario</p>
+                    </div>
+                    <p class="component-description">Tipografía con diferentes jerarquías de color para crear contraste adecuado y mejorar la legibilidad.</p>
+                </div>
+
+                <!-- Chips -->
+                <div class="component-card">
+                    <h3 class="component-title">Filter Chips</h3>
+                    <div class="component-demo demo-examples">
+                        <span class="filter-chip active">👂 Auditiva</span>
+                        <span class="filter-chip">👁️ Visual</span>
+                        <span class="filter-chip">♿ Motriz</span>
+                    </div>
+                    <p class="component-description">Elementos seleccionables para filtros, con estados activo/inactivo y gradientes para el estado seleccionado.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- MOLÉCULAS -->
+        <div class="section">
+            <h2 class="section-title">🧩 Moléculas</h2>
+            <p class="section-subtitle">Combinaciones de átomos que funcionan juntas como una unidad. Tienen propósitos específicos y pueden reutilizarse.</p>
+            
+            <div class="components-grid">
+                <!-- Formulario Básico -->
+                <div class="component-card">
+                    <h3 class="component-title">Grupo de Formulario</h3>
+                    <div class="component-demo">
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-input" placeholder="tu@email.com">
+                        </div>
+                    </div>
+                    <p class="component-description">Combinación de etiqueta y campo de entrada, manteniendo espaciado consistente y jerarquía visual clara.</p>
+                </div>
+
+                <!-- Barra de Búsqueda -->
+                <div class="component-card">
+                    <h3 class="component-title">Barra de Búsqueda</h3>
+                    <div class="component-demo">
+                        <div class="search-bar">
+                            <span style="color: rgba(255,255,255,0.6); font-size: 16px;">🔍</span>
+                            <input type="text" placeholder="Buscar lugares..." />
+                        </div>
+                    </div>
+                    <p class="component-description">Componente de búsqueda con ícono integrado, fondo semitransparente y bordes redondeados.</p>
+                </div>
+
+                <!-- Tarjeta de Estadística -->
+                <div class="component-card">
+                    <h3 class="component-title">Tarjeta de Estadística</h3>
+                    <div class="component-demo">
+                        <div class="quick-card">
+                            <div class="card-title">Eventos Hoy</div>
+                            <div class="card-value">5</div>
+                            <div class="card-subtitle">disponibles</div>
+                        </div>
+                    </div>
+                    <p class="component-description">Tarjeta informativa con jerarquía clara: título, valor destacado y descripción secundaria.</p>
+                </div>
+
+                <!-- Item de Navegación -->
+                <div class="component-card">
+                    <h3 class="component-title">Item de Navegación</h3>
+                    <div class="component-demo">
+                        <div class="nav-item active">
+                            <div class="nav-icon">🏠</div>
+                            <span>Inicio</span>
+                        </div>
+                    </div>
+                    <p class="component-description">Elemento de navegación con ícono y texto, incluyendo estado activo con color de acento.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ORGANISMOS -->
+        <div class="section">
+            <h2 class="section-title">🏗️ Organismos</h2>
+            <p class="section-subtitle">Componentes complejos que combinan múltiples moléculas y átomos para formar secciones distintivas de la interfaz.</p>
+            
+            <div class="components-grid">
+                <!-- Header del Dashboard -->
+                <div class="component-card">
+                    <h3 class="component-title">Header del Dashboard</h3>
+                    <div class="component-demo">
+                        <div class="dashboard-header">
+                            <div class="header-content">
+                                <div class="greeting">
+                                    <h2>Hola Elena</h2>
+                                    <div class="location">📍 Córdoba Capital, Argentina</div>
+                                </div>
+                                <div class="header-actions">
+                                    <div class="notification-icon">
+                                        🔔
+                                        <div class="notification-badge">3</div>
+                                    </div>
+                                    <div class="avatar"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="component-description">Header principal con saludo personalizado, ubicación, notificaciones y avatar del usuario.</p>
+                </div>
+
+                <!-- Navegación Inferior -->
+                <div class="component-card">
+                    <h3 class="component-title">Navegación Inferior</h3>
+                    <div class="component-demo">
+                        <div class="bottom-nav">
+                            <div class="nav-item active">
+                                <div class="nav-icon">🏠</div>
+                                <span>Inicio</span>
+                            </div>
+                            <div class="nav-item">
+                                <div class="nav-icon">🗺️</div>
+                                <span>Explorar</span>
+                            </div>
+                            <div class="nav-item">
+                                <div class="nav-icon">💬</div>
+                                <span>Chat</span>
+                            </div>
+                            <div class="nav-item">
+                                <div class="nav-icon">👤</div>
+                                <span>Perfil</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="component-description">Barra de navegación principal con cuatro secciones, estado activo y diseño accesible.</p>
+                </div>
+
+                <!-- Formulario de Registro -->
+                <div class="component-card">
+                    <h3 class="component-title">Formulario de Registro</h3>
+                    <div class="component-demo">
+                        <div class="form-container">
+                            <div class="form-header">
+                                <h2 class="form-title">Crear Cuenta</h2>
+                                <p class="form-subtitle">Únete a la comunidad más inclusiva</p>
+                            </div>
+                            <form>
+                                <div class="form-group">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-input" placeholder="tu@email.com">
+                                </div>
+                                <button class="btn-primary" style="width: 100%; margin-top: 20px;">Crear Cuenta</button>
+                            </form>
+                        </div>
+                    </div>
+                    <p class="component-description">Formulario completo con header, múltiples campos de entrada y botón de acción principal.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Principios de Diseño -->
+        <div class="section">
+            <h2 class="section-title">📋 Principios de Diseño</h2>
+            <div class="component-card">
+                <h3 class="component-title">Directrices del Sistema</h3>
+                <div style="padding: 20px; line-height: 1.8; color: rgba(255,255,255,0.8);">
+                    <p><strong>🔥 Inclusividad:</strong> Todos los componentes están diseñados pensando en la accesibilidad y diferentes tipos de discapacidad.</p>
+                    <br>
+                    <p><strong>🎨 Consistencia Visual:</strong> Uso coherente de gradientes, espaciados y tipografía en toda la aplicación.</p>
+                    <br>
+                    <p><strong>⚡ Feedback Inmediato:</strong> Estados hover, focus y active claramente definidos para mejor UX.</p>
+                    <br>
+                    <p><strong>🌙 Modo Oscuro:</strong> Diseño optimizado para reducir fatiga visual y mejorar legibilidad.</p>
+                    <br>
+                    <p><strong>📱 Mobile First:</strong> Componentes diseñados priorizando la experiencia móvil.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
